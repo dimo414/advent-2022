@@ -19,8 +19,8 @@ if (( date < 1 || date > 25 )); then
   echo "Invalid date: '${date}'" >&2
   exit 1
 fi
-printf -v date '%02d' "$date" # add leading 0
-printf -v input_url "${URL_FORMAT}" "${date}"
+printf -v date '%02d' "$date" # add leading 0 if missing
+printf -v input_url "${URL_FORMAT}" "${date#0}" # trim leading zero
 dir="src/bin/${date}"
 
 mkdir "$dir" || exit 1
