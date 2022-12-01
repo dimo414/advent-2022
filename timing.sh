@@ -5,7 +5,7 @@ accum=()
 
 # Borrowed from bkt's benchmark script
 avg_floats() {
-  python <(cat <<EOF
+  python3 <(cat <<EOF
 import sys
 total = sum((float(arg) for arg in sys.argv[1:]))
 print("{:.3f}".format(total/(len(sys.argv)-1)))
@@ -15,7 +15,7 @@ EOF
 
 # Borrowed from bkt's benchmark script
 sum_floats() {
-  python <(cat <<EOF
+  python3 <(cat <<EOF
 import sys
 total = sum((float(arg) for arg in sys.argv[1:]))
 print("{:.3f}".format(total))

@@ -170,7 +170,7 @@ mod disabled {
     pub struct Terminal;
 
     impl Terminal {
-        #[inline] pub fn init() {}
+        #[inline] pub fn init() -> bool { false } // return a value to bypass clippy::let_unit_value
         #[inline] pub fn active() -> bool { false }
         #[inline] pub fn interactive_display(_lazy: impl ToString, _delay: std::time::Duration) {}
         #[inline] pub fn interactive_render(_lazy: &impl TerminalRender, _delay: std::time::Duration) {}
