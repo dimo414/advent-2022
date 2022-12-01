@@ -6,7 +6,6 @@ cd "$SCRIPT_DIR" || exit
 YEAR=2022
 COOKIE_JAR=.cookie-jar
 URL_FORMAT=https://adventofcode.com/%s/day/%s/input
-TMP_FILE=$(mktemp)
 
 if [[ ! -f "$COOKIE_JAR" ]]; then
   {
@@ -31,8 +30,9 @@ else
   echo "${dir} already exists, not overwriting"
 fi
 
-if curl --fail --cookie "$COOKIE_JAR" "$input_url" > "$TMP_FILE" 2>/dev/null; then
-  mv "$TMP_FILE" "${dir}/input.txt"
+tmp_input=$(mktemp)
+if curl -A "curl: https://github.com/dimo414/advent-${YEAR}" --fail --cookie "$COOKIE_JAR" "$input_url" > "$tmp_input" 2>/dev/null; then
+  mv "$tmp_input" "${dir}/input.txt"
 elif grep -q $'\t$' "$COOKIE_JAR"; then
   echo "Failed to curl the puzzle input - cookie file seems incomplete!"
   echo "try grabbing the session cookie from a browser and appending it to ${COOKIE_JAR}"
