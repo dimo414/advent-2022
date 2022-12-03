@@ -1,6 +1,7 @@
 use std::collections::{HashMap, HashSet};
 use anyhow::Result;
 
+#[cfg(not(feature="timing"))]
 fn main() -> Result<()> {
     let mut misplaced_sum = 0;
     let mut badge_sum = 0;
@@ -15,13 +16,34 @@ fn main() -> Result<()> {
     Ok(())
 }
 
+// Benchmark for the intersection functions
+#[cfg(feature="timing")]
+fn main() -> Result<()> {
+    use advent_2022::terminal::elapsed;
+    let str_len = 10000;
+    let vec_len = 1000;
+    let group: Vec<_> = include_str!("example.txt").lines().take(3)
+        .map(|e| e.chars().cycle().take(str_len).collect::<String>())
+        .collect();
+
+    for i in 1..=group.len() {
+        let repeated: Vec<_> = group[..i].iter().map(|s| s.as_str()).cycle().take(vec_len).collect();
+        elapsed!(format!("all_1 subset {}", i), intersect_all_1(&repeated).len());
+        elapsed!(format!("all_2 subset {}", i), intersect_all_2(&repeated).len());
+        elapsed!(format!("all_3 subset {}", i), intersect_all_3(&repeated).len());
+        println!();
+    }
+
+    Ok(())
+}
+
 fn misplaced_item(elf: &str) -> HashSet<char> {
     let left = &elf[..elf.len()/2];
     let right = &elf[elf.len()/2..];
     intersect_all_2(&[left, right])
 }
 
-#[cfg(test)]
+#[cfg(any(test,feature="timing"))]
 fn intersect_all_1(inputs: &[&str]) -> HashSet<char> {
     let packs: Vec<_> = inputs.iter().map(|p| p.chars().collect::<HashSet<_>>()).collect();
     let all_items: HashSet<_> = inputs.iter().flat_map(|p| p.chars()).collect();
@@ -39,9 +61,25 @@ fn intersect_all_2(inputs: &[&str]) -> HashSet<char> {
                 *v = keep;
             }
         }
-        // could also set v=false here and not invert the keep variable, guessing it'd be slower
         intersection.retain(|_, &mut v| v == keep);
         keep = !keep;
+    }
+    intersection.into_keys().collect()
+}
+
+// same as all_2 but utilizes .retain()'s mutable value; marginally slower than all_2
+#[cfg(any(test,feature="timing"))]
+fn intersect_all_3(inputs: &[&str]) -> HashSet<char> {
+    if inputs.is_empty() { return HashSet::new(); }
+    let mut inputs = inputs.iter();
+    let mut intersection: HashMap<_,_> = inputs.next().expect("non-empty").chars().map(|c| (c, false)).collect();
+    for input in inputs {
+        for c in input.chars() {
+            if let Some(v) = intersection.get_mut(&c) {
+                *v = true;
+            }
+        }
+        intersection.retain(|_, v| { let ret = *v; *v = false; ret });
     }
     intersection.into_keys().collect()
 }
@@ -90,5 +128,6 @@ mod tests {
     intersect_impls! {
        all_1: intersect_all_1,
        all_2: intersect_all_2,
+       all_3: intersect_all_3,
     }
 }
