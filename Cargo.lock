@@ -132,9 +132,12 @@ checksum = "86f0b0d4bf799edbc74508c1e8bf170ff5f41238e5f8225603ca7caaae2b7860"
 
 [[package]]
 name = "parameterized_test"
-version = "0.1.0"
+version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f1fc5322b3eee32612f95d7740ca559b42251f3ba6e29862bbf6f1ea854751df"
+checksum = "9e64336c776e2f915bf4cf1095c78941fc2d9b764b5663273aa5f7eba1ea8248"
+dependencies = [
+ "anyhow",
+]
 
 [[package]]
 name = "regex"

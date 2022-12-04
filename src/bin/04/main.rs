@@ -1,6 +1,5 @@
 use std::str::FromStr;
 use anyhow::{Context, ensure, Error, Result};
-use advent_2022::collect::MoreIntoIterator;
 
 fn main() -> Result<()> {
     let input = parse_input(include_str!("input.txt"))?;
@@ -29,6 +28,7 @@ impl FromStr for Range {
 
     fn from_str(s: &str) -> Result<Self> {
         let parts = s.split("-").map(|n| n.parse::<i32>().context("")).collect::<Result<Vec<_>>>()?;
+        ensure!(parts[0] <= parts[1]);
         Ok(Range(parts[0], parts[1]))
     }
 }
@@ -55,9 +55,10 @@ fn count_overlaps(pairs: &[(Range, Range)]) -> u32 {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use advent_2022::collect::MoreIntoIterator;
 
     parameterized_test::create!{ example, (line, contains, contained, overlaps), {
-        let e = parse_input(line).unwrap().take_only().unwrap();
+        let e = parse_input(line)?.take_only()?;
         assert_eq!(e.0.contains(&e.1), contains);
         assert_eq!(e.1.contains(&e.0), contained);
         assert_eq!(e.0.overlaps(&e.1), e.1.overlaps(&e.0));

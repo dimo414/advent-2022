@@ -15,7 +15,7 @@ term_size = "0.3"
 itertools = "0.10.5"
 
 [dev-dependencies]
-parameterized_test = "0.1"
+parameterized_test = "0.2"
 assert_approx_eq = "1.1"
 
 # https://doc.rust-lang.org/1.29.0/book/first-edition/conditional-compilation.html
