@@ -1,5 +1,6 @@
 use std::collections::{HashMap, HashSet};
 use anyhow::Result;
+use advent_2022::collect::MoreIntoIterator;
 
 #[cfg(not(feature="timing"))]
 fn main() -> Result<()> {
@@ -7,9 +8,9 @@ fn main() -> Result<()> {
     let mut badge_sum = 0;
     for group in include_str!("input.txt").lines().collect::<Vec<_>>().chunks(3) {
         for elf in group {
-            misplaced_sum += score_set(&misplaced_item(elf));
+            misplaced_sum += score_set(&misplaced_item(elf))?;
         }
-        badge_sum += score_set(&intersect_all_2(&group));
+        badge_sum += score_set(&intersect_all_2(&group))?;
     }
     println!("Misplaced priority: {}", misplaced_sum);
     println!("Badges priority: {}", badge_sum);
@@ -84,9 +85,8 @@ fn intersect_all_3(inputs: &[&str]) -> HashSet<char> {
     intersection.into_keys().collect()
 }
 
-fn score_set(common: &HashSet<char>) -> u32 {
-    assert_eq!(common.len(), 1);
-    score(*common.iter().next().expect("non-empty"))
+fn score_set(common: &HashSet<char>) -> Result<u32> {
+    Ok(score(*common.take_only()?))
 }
 
 fn score(c: char) -> u32 {
@@ -106,7 +106,7 @@ mod tests {
         let elves: Vec<_> = include_str!("example.txt").lines().collect();
         let misplaced: Vec<_> = elves.iter().map(|e| misplaced_item(e).into_iter().collect::<String>()).collect();
         assert_eq!(misplaced, &["p", "L", "P", "v", "t", "s"]);
-        let scores: Vec<_> = misplaced.iter().map(|s| score(s.chars().next().unwrap())).collect();
+        let scores: Vec<_> = misplaced.iter().map(|s| score(s.chars().take_only().unwrap())).collect();
         assert_eq!(scores, &[16, 38, 42, 22, 20, 19]);
     }
 
@@ -116,7 +116,7 @@ mod tests {
         let groups: Vec<_> = elves.chunks(3).collect();
         let badges: Vec<_> = groups.iter().map(|g| intersect_all_2(g).into_iter().collect::<String>()).collect();
         assert_eq!(badges, &["r", "Z"]);
-        let scores: Vec<_> = badges.iter().map(|s| score(s.chars().next().unwrap())).collect();
+        let scores: Vec<_> = badges.iter().map(|s| score(s.chars().take_only().unwrap())).collect();
         assert_eq!(scores, &[18, 52]);
     }
 

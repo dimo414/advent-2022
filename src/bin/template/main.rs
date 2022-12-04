@@ -5,6 +5,7 @@
 use anyhow::Result;
 
 use advent_2022::parsing::*;
+use advent_2022::collect::{MoreIntoIterator,MoreItertools};
 
 fn main() -> Result<()> {
     let input = parse_input(include_str!("input.txt"));
