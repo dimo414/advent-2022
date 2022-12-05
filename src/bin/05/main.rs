@@ -114,24 +114,30 @@ impl<'a> TerminalRender for VisualizeStacks<'a> {
         let stack_height = self.stacks.stacks.iter().map(|s|s.len()).max().unwrap_or(5);
         let height = stack_height + 1 + self.lifted.map(|l| l.1.len()).unwrap_or(0);
         let width = self.stacks.stacks.len()+2;
-        let mut pixels = vec![Color::BLACK; height*width];
+        let mut image = vec![Color::BLACK; height*width];
 
         for (col, stack) in self.stacks.stacks.iter().enumerate() {
             for (row, cargo) in stack.iter().enumerate() {
-                pixels[(height-row-1)*width+col+1] = letter_color(*cargo);
+                image[(height-row-1)*width+col+1] = letter_color(*cargo);
             }
         }
 
         if let Some((col, stack)) = self.lifted {
             for (row, cargo) in stack.iter().enumerate() {
-                pixels[row*width+col+1] = letter_color(*cargo);
+                image[row*width+col+1] = letter_color(*cargo);
             }
         }
+        // Make each crate three pixels wide
+        let stretch = 3;
+        let width = width*stretch;
+        let mut pixels: Vec<_> = image.into_iter().flat_map(|c| std::iter::repeat(c).take(stretch)).collect();
+
+        // Add a "floor" two rows tall
+        pixels.extend(vec![Color::BROWN; width*2]);
 
         // Fill the top of the image up to the provided height, so the image stays pinned at the
         // bottom of the terminal window. This mostly works, but the image still jumps around a bit
         // when the height is taller than the height_hint. Would be nice to improve.
-        pixels.extend(vec![Color::BROWN; width*2]);
         if height_hint > height {
             let mut buffer = vec![Color::BLACK; (height_hint - height) * width];
             buffer.extend(pixels);

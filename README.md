@@ -4,7 +4,7 @@
 
 ### Day 5
 
-<img src="https://user-images.githubusercontent.com/1885701/205610479-0d3f8a69-f8ad-4990-9503-6cfab87e8dbe.png" width="140">
+<img src="https://user-images.githubusercontent.com/1885701/205711153-85ff0148-9fdc-444c-933d-a13020fccd38.png">
 
 ## Timings
 
