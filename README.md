@@ -2,7 +2,9 @@
 
 ## Visualizations
 
-TBD
+### Day 5
+
+<img src="https://user-images.githubusercontent.com/1885701/205610479-0d3f8a69-f8ad-4990-9503-6cfab87e8dbe.png" width="140">
 
 ## Timings
 
