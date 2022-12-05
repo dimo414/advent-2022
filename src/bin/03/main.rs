@@ -2,15 +2,16 @@ use std::collections::{HashMap, HashSet};
 use anyhow::Result;
 use advent_2022::collect::MoreIntoIterator;
 
-#[cfg(not(feature="timing"))]
 fn main() -> Result<()> {
+    benchmark()?;
+
     let mut misplaced_sum = 0;
     let mut badge_sum = 0;
     for group in include_str!("input.txt").lines().collect::<Vec<_>>().chunks(3) {
         for elf in group {
             misplaced_sum += score_set(&misplaced_item(elf))?;
         }
-        badge_sum += score_set(&intersect_all_2(&group))?;
+        badge_sum += score_set(&intersect_all_2(group))?;
     }
     println!("Misplaced priority: {}", misplaced_sum);
     println!("Badges priority: {}", badge_sum);
@@ -18,8 +19,10 @@ fn main() -> Result<()> {
 }
 
 // Benchmark for the intersection functions
+#[cfg(not(feature="timing"))]
+fn benchmark() -> Result<()> { Ok(()) }
 #[cfg(feature="timing")]
-fn main() -> Result<()> {
+fn benchmark() -> Result<()> {
     use advent_2022::terminal::elapsed;
     let str_len = 10000;
     let vec_len = 1000;

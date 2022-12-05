@@ -27,7 +27,7 @@ impl FromStr for Range {
     type Err = Error;
 
     fn from_str(s: &str) -> Result<Self> {
-        let parts = s.split("-").map(|n| n.parse::<i32>().context("")).collect::<Result<Vec<_>>>()?;
+        let parts = s.split('-').map(|n| n.parse::<i32>().context("")).collect::<Result<Vec<_>>>()?;
         ensure!(parts[0] <= parts[1]);
         Ok(Range(parts[0], parts[1]))
     }
@@ -35,11 +35,11 @@ impl FromStr for Range {
 
 fn parse_input(input: &str) -> Result<Vec<(Range, Range)>> {
     fn parse_pair(line: &str) -> Result<(Range, Range)> {
-        let parts = line.split(",").map(|r| r.parse::<Range>()).collect::<Result<Vec<_>>>()?;
+        let parts = line.split(',').map(|r| r.parse::<Range>()).collect::<Result<Vec<_>>>()?;
         ensure!(parts.len() == 2);
         Ok((parts[0], parts[1]))
     }
-    input.lines().map(|l| parse_pair(l)).collect()
+    input.lines().map(parse_pair).collect()
 }
 
 fn count_contains(pairs: &[(Range, Range)]) -> u32 {
