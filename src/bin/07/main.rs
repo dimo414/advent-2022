@@ -22,7 +22,7 @@ fn main() -> Result<()> {
 fn resolve_path<P: AsRef<Path>>(root: &Path, dir: P) -> Result<PathBuf> {
     let dir = dir.as_ref();
     if dir == Path::new("..") {
-        Ok(root.parent().ok_or(anyhow!("Cannot resolve parent of /"))?.to_path_buf())
+        Ok(root.parent().ok_or_else(|| anyhow!("Cannot resolve parent of /"))?.to_path_buf())
     } else {
         Ok(root.join(dir))
     }
@@ -35,14 +35,14 @@ fn construct_filesystem(executions: &[Execution]) -> Result<BTreeMap<PathBuf, u3
         match &execution.command {
             Command::Cd(dir) => {
                 ensure!(execution.output.is_empty(), "{:?}", execution.output);
-                if dir.starts_with("/") {
+                if dir.starts_with('/') {
                     cur_dir = Some(Path::new(dir).to_path_buf());
                 } else {
-                    cur_dir = Some(resolve_path(&cur_dir.ok_or(anyhow!("Unknown cwd"))?,Path::new(dir))?);
+                    cur_dir = Some(resolve_path(&cur_dir.ok_or_else(|| anyhow!("Unknown cwd"))?,Path::new(dir))?);
                 }
             },
             Command::Ls => {
-                let cur_dir = cur_dir.as_ref().ok_or(anyhow!("Unknown cwd"))?;
+                let cur_dir = cur_dir.as_ref().ok_or_else(|| anyhow!("Unknown cwd"))?;
                 for line in &execution.output {
                     let parts: Vec<_> = line.split(' ').collect();
                     ensure!(parts.len() == 2);
@@ -79,10 +79,10 @@ fn directory_sizes(files: &BTreeMap<PathBuf, u32>) -> BTreeMap<PathBuf, u32> {
 fn cleanup_directory(dirs: &BTreeMap<PathBuf, u32>) -> Result<u32> {
     let disk_size = 70000000;
     let need_free = 30000000;
-    let used = dirs.get(Path::new("/")).cloned().ok_or(anyhow!("No root"))?;
+    let used = dirs.get(Path::new("/")).cloned().ok_or_else(|| anyhow!("No root"))?;
     let free = disk_size - used;
     let needed = need_free - free;
-    dirs.values().filter(|&&s| s >= needed).cloned().min().ok_or(anyhow!("No min"))
+    dirs.values().filter(|&&s| s >= needed).cloned().min().ok_or_else(|| anyhow!("No min"))
 }
 
 #[derive(Debug)]

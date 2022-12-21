@@ -22,7 +22,7 @@ fn parse_input(input: &str) -> Result<BTreeMap<Point, i32>> {
     for (pos_y, line) in input.lines().enumerate() {
         for (pos_x, height) in line.chars().enumerate() {
             let pos = point(pos_x as i32, pos_y as i32);
-            ret.insert(pos, height.to_digit(10).ok_or(anyhow!("Invalid digit"))? as i32);
+            ret.insert(pos, height.to_digit(10).ok_or_else(|| anyhow!("Invalid digit"))? as i32);
         }
     }
     Ok(ret)
@@ -43,11 +43,11 @@ fn find_visible_trees(forest: &BTreeMap<Point, i32>) -> Result<BTreeSet<Point>> 
         visible
     }
 
-    let bounds = Point::bounding_box(forest.keys()).ok_or(anyhow!("Empty bounds"))?;
+    let bounds = Point::bounding_box(forest.keys()).ok_or_else(|| anyhow!("Empty bounds"))?;
 
     Ok((bounds.0.x..=bounds.1.x).flat_map(|x| [(point(x, bounds.0.y), vector(0,1)), (point(x, bounds.1.y), vector(0,-1))]).chain(
         (bounds.0.y..=bounds.1.y).flat_map(|y| [(point(bounds.0.x, y), vector(1,0)), (point(bounds.1.x, y), vector(-1,0))])
-    ).flat_map(|(p, v)| check_visibility(&forest, p, v)).collect())
+    ).flat_map(|(p, v)| check_visibility(forest, p, v)).collect())
 }
 
 fn scenic_score(forest: &BTreeMap<Point, i32>, tree: Point) -> u32 {
