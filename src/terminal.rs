@@ -138,10 +138,11 @@ impl TerminalImage {
 
 impl std::fmt::Display for TerminalImage {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        assert_eq!(self.pixels.len() % self.width, 0, "Incomplete image");
+        assert_eq!(self.pixels.len() % self.width, 0, "Incomplete image; {} pixels over {} columns", self.pixels.len(), self.width);
         let mut out = String::new();
         out.reserve(self.pixels.len()*10);
 
+        // TODO don't append identical escape codes
         for r in (0..(self.pixels.len()/self.width)).step_by(2) {
             for c in 0..self.width {
                 let i = self.width*r+c;
@@ -191,6 +192,7 @@ pub use self::real::*;
 #[cfg(feature = "interactive")]
 mod real {
     use std::sync::atomic::{AtomicUsize, Ordering};
+    use std::time::Instant;
     use crate::terminal::TerminalRender;
 
     static CURSOR_SHIFT: AtomicUsize = AtomicUsize::new(0);
@@ -280,11 +282,12 @@ mod real {
         // overwrite it. The cursor is left on the last line of the terminal at the first column,
         // which is blank.
         pub fn interactive_render(lazy: &impl TerminalRender, delay: std::time::Duration) {
+            let start = Instant::now();
             let (term_width, term_height) = term_size::dimensions().expect("Interactive mode unsupported");
             let print_height = term_height-1; // Leave one line for the cursor
-            let image = lazy.render(term_width, print_height).truncate(term_width, print_height);
+            let image = lazy.render(term_width, 2*print_height).truncate(term_width, print_height);
             Terminal::interactive_print(image.to_string(), print_height);
-            std::thread::sleep(delay);
+            std::thread::sleep(delay.saturating_sub(Instant::now() - start));
         }
 
         // Resets the interactive cursor's position, so that subsequent interactive calls will not

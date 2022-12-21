@@ -358,8 +358,18 @@ mod vector {
             vector(-1, 0), vector(-1, -1), vector(0, -1), vector(1, -1),
             vector(1, 0), vector(1, 1), vector(0, 1), vector(-1, 1)];
 
-        pub fn abs(&self) -> Vector {
+        pub fn abs(&self) -> Self {
             vector(self.x.abs(), self.y.abs())
+        }
+
+        pub fn signum(&self) -> Self {
+            debug_assert!(self.x == 0 || self.y == 0 || self.x.abs() == self.y.abs(),
+                          "{}.signum() is lossy; use signum_unchecked() if this is acceptable", self);
+            self.signum_unchecked()
+        }
+
+        pub fn signum_unchecked(&self) -> Self {
+            vector(self.x.signum(), self.y.signum())
         }
 
         pub fn len(&self) -> f64 {
@@ -374,7 +384,7 @@ mod vector {
     impl Add<Vector> for Vector {
         type Output = Vector;
 
-        fn add(self, vec: Vector) -> Vector {
+        fn add(self, vec: Self) -> Self {
             vector(self.x + vec.x, self.y + vec.y)
         }
     }
@@ -382,19 +392,19 @@ mod vector {
     impl Add<&Vector> for Vector {
         type Output = Vector;
 
-        fn add(self, vec: &Vector) -> Vector {
+        fn add(self, vec: &Self) -> Self {
             vector(self.x + vec.x, self.y + vec.y)
         }
     }
 
     impl AddAssign<Vector> for Vector {
-        fn add_assign(&mut self, vec: Vector) {
+        fn add_assign(&mut self, vec: Self) {
             *self = vector(self.x + vec.x, self.y + vec.y);
         }
     }
 
     impl AddAssign<&Vector> for Vector {
-        fn add_assign(&mut self, vec: &Vector) {
+        fn add_assign(&mut self, vec: &Self) {
             *self = vector(self.x + vec.x, self.y + vec.y);
         }
     }
@@ -402,7 +412,7 @@ mod vector {
     impl Mul<i32> for Vector {
         type Output = Vector;
 
-        fn mul(self, m: i32) -> Vector {
+        fn mul(self, m: i32) -> Self {
             vector(self.x * m, self.y * m)
         }
     }
