@@ -163,6 +163,9 @@ mod tests {
     use super::*;
 
     #[test]
+    fn check_input() { include_str!("input.txt").parse::<Cave>().unwrap(); }
+
+    #[test]
     fn example() {
         let mut cave: Cave = include_str!("example.txt").parse().unwrap();
         while cave.pour() == Outcome::Stuck {}

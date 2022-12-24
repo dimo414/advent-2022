@@ -180,6 +180,9 @@ mod tests {
     use super::*;
 
     #[test]
+    fn check_input() { parse_input(include_str!("input.txt")).unwrap(); }
+
+    #[test]
     fn crate_mover_9000() -> Result<()> {
         let (mut stacks, instructions) = parse_input(include_str!("example.txt"))?;
 

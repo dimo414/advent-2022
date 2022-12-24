@@ -57,6 +57,9 @@ mod tests {
     use super::*;
     use advent_2022::collect::MoreIntoIterator;
 
+    #[test]
+    fn check_input() { parse_input(include_str!("input.txt")).unwrap(); }
+
     parameterized_test::create!{ example, (line, contains, contained, overlaps), {
         let e = parse_input(line)?.take_only()?;
         assert_eq!(e.0.contains(&e.1), contains);

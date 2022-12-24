@@ -76,6 +76,9 @@ mod tests {
     use super::*;
 
     #[test]
+    fn check_input() { parse_input(include_str!("input.txt")).unwrap(); }
+
+    #[test]
     fn visible_trees() {
         let forest = parse_input(include_str!("example.txt")).unwrap();
         let visible = find_visible_trees(&forest).unwrap();

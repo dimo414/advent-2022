@@ -36,7 +36,10 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_input() {
+    fn check_input() { parse_input(include_str!("input.txt")).unwrap(); }
+
+    #[test]
+    fn example() {
         let example = parse_input(include_str!("example.txt")).unwrap();
         assert_eq!(example, &[6000, 4000, 11000, 24000, 10000]);
     }

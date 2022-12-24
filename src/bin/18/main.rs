@@ -52,6 +52,9 @@ mod tests {
     use advent_2022::euclid3d::point;
 
     #[test]
+    fn check_input() { parse_input(include_str!("input.txt")).unwrap(); }
+
+    #[test]
     fn minimal_example() {
         let points: BTreeSet<_> = [point(1, 1, 1), point(2, 1, 1)].into_iter().collect();
         assert_eq!(count_all_exposed(&points), 10);

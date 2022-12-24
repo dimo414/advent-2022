@@ -119,6 +119,9 @@ fn parse_input(input: &str) -> Result<Vec<Vector>> {
 mod tests {
     use super::*;
 
+    #[test]
+    fn check_input() { parse_input(include_str!("input.txt")).unwrap(); }
+
     const EXAMPLE_1: &str = include_str!("example-1.txt");
     const EXAMPLE_2: &str = include_str!("example-2.txt");
 

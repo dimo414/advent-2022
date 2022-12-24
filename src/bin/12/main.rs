@@ -102,6 +102,9 @@ mod tests {
     use super::*;
 
     #[test]
+    fn check_input() { include_str!("input.txt").parse::<Landscape>().unwrap(); }
+
+    #[test]
     fn traverse() {
         let landscape: Landscape = include_str!("example.txt").parse().unwrap();
         let path = landscape.traverse().unwrap();

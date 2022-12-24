@@ -138,6 +138,9 @@ mod tests {
     use super::*;
 
     #[test]
+    fn check_input() { parse_input(include_str!("input.txt")).unwrap(); }
+
+    #[test]
     fn rebuild_fs() {
         let execution = parse_input(include_str!("example.txt")).unwrap();
         let filesystem = construct_filesystem(&execution).unwrap();

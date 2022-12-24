@@ -119,6 +119,9 @@ mod tests {
     use super::*;
 
     #[test]
+    fn check_input() { parse_input(include_str!("input.txt")).unwrap(); }
+
+    #[test]
     fn example() {
         let example = parse_input(include_str!("example.txt")).unwrap();
         assert_eq!(example.iter().map(|r| r.score_choice()).sum::<i32>(), 15);

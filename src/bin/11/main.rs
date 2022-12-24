@@ -144,6 +144,9 @@ mod tests {
     use super::*;
 
     #[test]
+    fn check_input() { parse_input(include_str!("input.txt")).unwrap(); }
+
+    #[test]
     fn example_1() {
         let monkeys = parse_input(include_str!("example.txt")).unwrap();
         let mut game = KeepAway::new(&monkeys, 3);

@@ -123,6 +123,9 @@ fn parse_input(input: &str) -> Result<Vec<Packet>> {
 mod tests {
     use super::*;
 
+    #[test]
+    fn check_input() { parse_input(include_str!("input.txt")).unwrap(); }
+
     parameterized_test::create!{ parse, (s, expected), { assert_eq!(s.parse::<Packet>()?, expected); } }
     parse! {
         num: ("10", Packet::Num(10)),

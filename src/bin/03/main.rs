@@ -105,6 +105,9 @@ mod tests {
     use super::*;
 
     #[test]
+    fn check_input() { assert!(include_str!("input.txt").lines().count() > 0); }
+
+    #[test]
     fn misplaced() {
         let elves: Vec<_> = include_str!("example.txt").lines().collect();
         let misplaced: Vec<_> = elves.iter().map(|e| misplaced_item(e).into_iter().collect::<String>()).collect();

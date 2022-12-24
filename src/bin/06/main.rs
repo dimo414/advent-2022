@@ -32,6 +32,9 @@ fn all_different(s: &[u8]) -> bool {
 mod tests {
     use super::*;
 
+    #[test]
+    fn check_input() { assert!(!include_str!("input.txt").is_empty()); }
+
     parameterized_test::create!{ examples, (data, idx4, idx14), {
         assert_eq!(find_marker(data, 4).unwrap(), idx4);
         assert_eq!(find_marker(data, 14).unwrap(), idx14);

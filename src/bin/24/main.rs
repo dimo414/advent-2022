@@ -43,9 +43,9 @@ struct Valley {
 
 impl Valley {
     fn traverse(&self) -> Result<[usize; 3]> {
-        let path1 = self.bfs(&(self.source, 0), |&(pos, _)| pos == self.dest).ok_or(anyhow!("No path found"))?;
-        let path2 = self.bfs(path1.last().expect("Path"), |&(pos, _)| pos == self.source).ok_or(anyhow!("No path found"))?;
-        let path3 = self.bfs(path2.last().expect("Path"), |&(pos, _)| pos == self.dest).ok_or(anyhow!("No path found"))?;
+        let path1 = self.bfs(&(self.source, 0), |&(pos, _)| pos == self.dest).ok_or_else(|| anyhow!("No path found"))?;
+        let path2 = self.bfs(path1.last().expect("Path"), |&(pos, _)| pos == self.source).ok_or_else(|| anyhow!("No path found"))?;
+        let path3 = self.bfs(path2.last().expect("Path"), |&(pos, _)| pos == self.dest).ok_or_else(|| anyhow!("No path found"))?;
         Ok([path1.len() - 1, path2.len() - 1, path3.len() - 1])
     }
 
@@ -68,25 +68,25 @@ impl Graph for Valley {
     type Node = (Point, i32);
 
     fn neighbors(&self, source: &Self::Node) -> Vec<Edge<Self::Node>> {
-        let (cur, time) = source;
+        let (cur, time) = *source;
         let next = time + 1;
         let mut dests: Vec<_> = Vector::CARDINAL.iter().map(|v| cur + v).filter(|&p| self.open(next, p)).collect();
-        if self.open(next, *cur) {
-            dests.push(*cur);
+        if self.open(next, cur) {
+            dests.push(cur);
         }
-        if *cur == self.dest + vector(0, -1) {
+        if cur == self.dest + vector(0, -1) {
             dests.push(self.dest);
         }
-        if *cur == self.dest {
+        if cur == self.dest {
             dests.push(self.dest + vector(0, -1));
         }
-        if *cur == point(0, 0) {
+        if cur == point(0, 0) {
             dests.push(point(0, -1));
         }
-        if *cur == point(0, -1) {
+        if cur == point(0, -1) {
             dests.push(point(0, 0));
         }
-        dests.into_iter().map(|d| Edge::new(1, source.clone(), (d, next))).collect()
+        dests.into_iter().map(|d| Edge::new(1, *source, (d, next))).collect()
     }
 }
 
