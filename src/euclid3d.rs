@@ -191,6 +191,10 @@ mod vector {
     }
 
     impl Vector {
+        pub const CARDINAL: &'static [Vector] = &[
+            vector(-1, 0, 0), vector(0, -1, 0), vector(0, 0, -1),
+            vector(1, 0, 0), vector(0, 1,  0), vector(0, 0, 1)];
+
         pub fn abs(&self) -> Vector {
             vector(self.x.abs(), self.y.abs(), self.z.abs())
         }
