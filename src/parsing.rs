@@ -3,7 +3,7 @@ use regex::{Captures, Regex};
 
 #[macro_export]
 macro_rules! static_regex {
-  ($pattern:literal) => {{
+  ($pattern:expr) => {{
     lazy_static::lazy_static! { static ref RE: regex::Regex = regex::Regex::new($pattern).unwrap(); }
     &*RE
   }}
